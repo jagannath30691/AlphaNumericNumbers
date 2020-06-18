@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.corporatebrokers.codingtest.request.PhoneNbrUIRequest;
+import com.corporatebrokers.codingtest.response.PhoneNbrUIResponse;
 import com.corporatebrokers.codingtest.service.AlphaNumericCalculatorService;
 
 
@@ -35,10 +36,14 @@ public class AlphaNumericCalculatorController {
 	@PostMapping("/calculate")
 	public List<String> alphaNumericNumbers(@RequestBody PhoneNbrUIRequest request){
 		List<String> result = null;
+		PhoneNbrUIResponse response = null;
 		try {
 			if(request != null && StringUtils.isNotBlank(request.getPhoneNumber())) {
 				result = calculatorService.findAlphaNUmericCombinations(request.getPhoneNumber());
 				if(CollectionUtils.isNotEmpty(result)) {
+					response = new PhoneNbrUIResponse();
+					response.setPhoneNbrs(result);
+					response.setTotalCount(result.size());
 					LOGGER.debug("Possible alphanumeric combination for {} is {}",request.getPhoneNumber(), result);
 				} else {
 					LOGGER.error("There are no alphanumeric combination for {}", request.getPhoneNumber());
