@@ -1,16 +1,21 @@
 package com.corporatebrokers.codingtest.controller;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.corporatebrokers.codingtest.request.PhoneNbrUIRequest;
 import com.corporatebrokers.codingtest.service.AlphaNumericCalculatorService;
 
 
@@ -18,6 +23,7 @@ import com.corporatebrokers.codingtest.service.AlphaNumericCalculatorService;
 @RequestMapping("/calculator")
 public class AlphaNumericCalculatorController {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private AlphaNumericCalculatorService calculatorService;
 	
 	@Autowired
@@ -27,18 +33,20 @@ public class AlphaNumericCalculatorController {
 	}
 
 	@PostMapping("/calculate")
-	public List<String> alphaNumericNumbers(@RequestBody String phoneNumber){
+	public List<String> alphaNumericNumbers(@RequestBody PhoneNbrUIRequest request){
 		List<String> result = null;
 		try {
-			phoneNumber = "72792684";
-			result = calculatorService.findAlphaNUmericCombinations(phoneNumber);
-			Set<String> a = new HashSet<>(result);
-			if(CollectionUtils.isNotEmpty(result)) {
-				for(String s : a) {
-					System.out.println(s);
+			if(request != null && StringUtils.isNotBlank(request.getPhoneNumber())) {
+				result = calculatorService.findAlphaNUmericCombinations(request.getPhoneNumber());
+				if(CollectionUtils.isNotEmpty(result)) {
+					LOGGER.debug("Possible alphanumeric combination for {} is {}",request.getPhoneNumber(), result);
+				} else {
+					LOGGER.error("There are no alphanumeric combination for {}", request.getPhoneNumber());
 				}
+			} else {
+				LOGGER.error("Invalid phone number");
 			}
-			System.out.println("count: "+a.size());
+			
 		} catch (Exception e) {
 			e.getLocalizedMessage();
 		}
