@@ -1,10 +1,11 @@
 package com.corporatebrokers.codingtest.service;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import com.corporatebrokers.codingtest.response.PhoneNbrUIResponse;
 
 public interface AlphaNumericCalculatorService {
 
 
-	List<String> findAlphaNUmericCombinations(String phoneNumber) throws InterruptedException, ExecutionException;
+	PhoneNbrUIResponse findAlphaNUmericCombinations(String phoneNumber, int pageNumber, int pageSize) throws InterruptedException, ExecutionException;
 }
