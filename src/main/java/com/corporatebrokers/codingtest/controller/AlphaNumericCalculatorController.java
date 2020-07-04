@@ -35,15 +35,17 @@ public class AlphaNumericCalculatorController {
 												@RequestParam("pageNumber") int pageNumber, 
 									            @RequestParam("pageSize") int pageSize){
 		PhoneNbrUIResponse response = null;
+		
 		try {
 			if(request != null && StringUtils.isNotBlank(request.getPhoneNumber())
 					&& pageNumber >= 0 && pageSize > 0) {
+				
 				response = calculatorService.findAlphaNUmericCombinations(request.getPhoneNumber(), pageNumber, pageSize);
 				if(response != null) {
 					LOGGER.debug("Possible alphanumeric combination for {} is {}",request.getPhoneNumber(), response.getPhoneNbrs());
 				} else {
 					LOGGER.error("There are no alphanumeric combination for {}", request.getPhoneNumber());
-				}
+				}	
 			} else {
 				LOGGER.error("Invalid phone number");
 			}
